@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@types/google-apps-script": "^1.0.67",
+    "@types/google.script.client-side": "^0.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "vite-plugin-singlefile": "^0.13.5"

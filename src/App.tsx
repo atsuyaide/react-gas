@@ -1,10 +1,22 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+  const showAlert = () => {
+    google.script.run
+      .withSuccessHandler((result: string) => {
+        alert(`現在は${result}です.`);
+      })
+      .withFailureHandler((e: any) => {
+        if (e instanceof Error) {
+          alert("実行に失敗しました.");
+        }
+      })
+      .getDateTimeNow();
+  };
 
   return (
     <>
@@ -28,8 +40,9 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+      <button onClick={showAlert}>現在時刻を表示</button>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
