@@ -12,10 +12,14 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.14.10",
     "@types/google-apps-script": "^1.0.67",
     "@types/google.script.client-side": "^0.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.46.2",
     "vite-plugin-singlefile": "^0.13.5",
     "vitest": "^0.34.5"
   },

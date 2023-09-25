@@ -37,7 +37,7 @@ function getSheet(sheetName: string): GoogleAppsScript.Spreadsheet.Sheet {
 
 // @ts-ignore
 function getOptions(): Record<string, string>[] {
-  const values = getSheet("UTC").getDataRange().getValues();
+  const values = getSheet("TZ").getDataRange().getValues();
   const columns = values[0];
   const records = values.slice(1);
   return convertToOptions<string>(columns, records);
