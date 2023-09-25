@@ -8,14 +8,16 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "deploy": "tsc && vite build && clasp push && clasp deploy -i AKfycbzd87Fxk9Z6IlIyrbMI8iKxppAPnSZdLhGfhKQQXcWfoZ_trW5N98ekop_VYteF2VzeTA"
+    "deploy": "tsc && vite build && clasp push && clasp deploy -i AKfycbzd87Fxk9Z6IlIyrbMI8iKxppAPnSZdLhGfhKQQXcWfoZ_trW5N98ekop_VYteF2VzeTA",
+    "test": "vitest"
   },
   "dependencies": {
     "@types/google-apps-script": "^1.0.67",
     "@types/google.script.client-side": "^0.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "vite-plugin-singlefile": "^0.13.5"
+    "vite-plugin-singlefile": "^0.13.5",
+    "vitest": "^0.34.5"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
