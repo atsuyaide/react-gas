@@ -1,5 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, MenuItem, Stack, TextField } from "@mui/material";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 
@@ -7,7 +8,7 @@ interface TzOption {
   value: string;
   label: string;
 }
-interface FormatOption {
+interface FmtOption {
   書式: string;
 }
 interface FormInput {
@@ -15,11 +16,11 @@ interface FormInput {
   fmt: string;
 }
 
-const TzOptions: TzOption[] = [
+const tzMockOptions: TzOption[] = [
   { value: "JST", label: "JST" },
   { value: "UTC", label: "UTC" },
 ];
-const FormatOptions: FormatOption[] = [
+const fmtMockOptions: FmtOption[] = [
   { 書式: "yyyy-MM-dd" },
   { 書式: "yyyy-MM-dd HH:mm:SS" },
 ];
@@ -33,6 +34,8 @@ interface FormProps {
 }
 
 const Form = (props: FormProps) => {
+  const [tzOptions, setTz] = useState<TzOption[]>(tzMockOptions);
+  const [fmtOptions, setFmt] = useState<FmtOption[]>(fmtMockOptions);
   const {
     register,
     handleSubmit,
@@ -40,31 +43,64 @@ const Form = (props: FormProps) => {
   } = useForm<FormInput>({
     resolver: yupResolver(schema),
   });
-  const onSubmit: SubmitHandler<FormInput> = (data) => {
+
+  // 読み込み時にSSと接続して選択肢を設定する
+  useEffect(() => {
+    const fetchData = async () => {
+      props.setLoading(true);
+
+      try {
+        const tzResult: TzOption[] = await new Promise((resolve, reject) => {
+          google.script.run
+            .withSuccessHandler(resolve)
+            .withFailureHandler(reject)
+            .getTzOptions();
+        });
+        setTz(tzResult);
+
+        const fmtResult: FmtOption[] = await new Promise((resolve, reject) => {
+          google.script.run
+            .withSuccessHandler(resolve)
+            .withFailureHandler(reject)
+            .getFmtOptions();
+        });
+        setFmt(fmtResult);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log(`失敗しました: ${error.message}`);
+        }
+      } finally {
+        props.setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // ボタン押下時
+  const onSubmit: SubmitHandler<FormInput> = async (data) => {
     props.setLoading(true);
     console.log(data);
+
     try {
-      google.script.run
-        .withSuccessHandler((result: string) => {
-          alert(`現在は${result}です.`);
-          props.setLoading(false);
-        })
-        .withFailureHandler((e: any) => {
-          if (e instanceof Error) {
-            alert("実行に失敗しました.");
-          }
-          props.setLoading(false);
-        })
-        .getDateTimeNow(data.tz, data.fmt);
+      const result: string = await new Promise((resolve, reject) => {
+        google.script.run
+          .withSuccessHandler(resolve)
+          .withFailureHandler(reject)
+          .getDateTimeNow(data.tz, data.fmt);
+      });
+
+      alert(`現在は${result}です.`);
     } catch (error) {
       if (error instanceof Error) {
         console.log(`失敗しました: ${error.message}`);
+        alert("実行に失敗しました.");
       }
-      setTimeout(() => {
-        props.setLoading(false);
-      }, 2000);
+    } finally {
+      props.setLoading(false);
     }
   };
+
   return (
     <>
       <Stack spacing={2}>
@@ -76,7 +112,7 @@ const Form = (props: FormProps) => {
           label="タイムゾーン"
           {...register("tz")}
         >
-          {TzOptions.map((opt) => (
+          {tzOptions.map((opt) => (
             <MenuItem value={opt.value}>{opt.label}</MenuItem>
           ))}
         </TextField>
@@ -88,7 +124,7 @@ const Form = (props: FormProps) => {
           label="書式"
           {...register("fmt")}
         >
-          {FormatOptions.map((opt) => (
+          {fmtOptions.map((opt) => (
             <MenuItem value={opt.書式}>{opt.書式}</MenuItem>
           ))}
         </TextField>

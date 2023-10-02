@@ -27,6 +27,7 @@ function getSheet(sheetName: string): GoogleAppsScript.Spreadsheet.Sheet {
   if (!ssId) {
     throw new Error("Error: SS_IDが設定されていません.");
   }
+  console.log(`SS_ID: ${ssId}`);
   const ss = SpreadsheetApp.openById(ssId);
   const sheet = ss.getSheetByName(sheetName);
   if (!sheet) {
@@ -36,7 +37,7 @@ function getSheet(sheetName: string): GoogleAppsScript.Spreadsheet.Sheet {
 }
 
 // @ts-ignore
-function getOptions(): Record<string, string>[] {
+function getTzOptions(): Record<string, string>[] {
   const values = getSheet("TZ").getDataRange().getValues();
   const columns = values[0];
   const records = values.slice(1);
@@ -44,7 +45,7 @@ function getOptions(): Record<string, string>[] {
 }
 
 // @ts-ignore
-function getFormats(): Record<string, string>[] {
+function getFmtOptions(): Record<string, string>[] {
   const values = getSheet("書式").getDataRange().getValues();
   const columns = values[0];
   const records = values.slice(1);

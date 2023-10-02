@@ -1,7 +1,7 @@
 import { Backdrop, CircularProgress } from "@mui/material";
 import { useState } from "react";
 import "./App.css";
-import Form from "./components/ Form";
+import Form from "./components/Form";
 import Icons from "./components/Icons";
 
 function App() {
